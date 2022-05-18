@@ -5,7 +5,7 @@ public interface Listen {
     // Добавление элемента.
     // Вернуть добавленный элемент
     // в качестве результата выполнения.
-    String add(Integer item);
+    Integer add(Integer item);
 
     // Добавление элемента
     // на определенную позицию списка.
@@ -14,7 +14,7 @@ public interface Listen {
     // выбросить исключение.
     // Вернуть добавленный элемент
     // в качестве результата выполнения.
-    String add(int index, Integer item);
+    Integer add(int index, Integer item);
 
     // Установить элемент
     // на определенную позицию,
@@ -23,19 +23,19 @@ public interface Listen {
     // если индекс больше
     // фактического количества элементов
     // или выходит за пределы массива.
-    String set(int index, Integer item);
+    Integer set(int index, Integer item);
 
     // Удаление элемента.
     // Вернуть удаленный элемент
     // или исключение, если подобный
     // элемент отсутствует в списке.
-    String remove(Integer item);
+    Integer remove(Integer item);
 
     // Удаление элемента по индексу.
     // Вернуть удаленный элемент
     // или исключение, если подобный
     // элемент отсутствует в списке.
-    String remove(int index);
+    Integer remove(int index);
 
     // Проверка на существование элемента.
     // Вернуть true/false;
@@ -55,7 +55,7 @@ public interface Listen {
     // Вернуть элемент или исключение,
     // если выходит за рамки фактического
     // количества элементов.
-    String get(int index);
+    Integer get(int index);
 
     // Сравнить текущий список с другим.
     // Вернуть true/false или исключение,
