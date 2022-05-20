@@ -102,7 +102,6 @@ public class IntListenImpl implements Listen {
     public boolean contains(Integer item) {
         checkIfNull(item);
         Integer[] storageCopy = storage.clone();
-        //sortSelection(storageCopy);
         quickSort(storageCopy, 0, storageCopy.length -1);
         return binarySearch(storageCopy, item) != -1;
     }
@@ -146,18 +145,6 @@ public class IntListenImpl implements Listen {
         return -1;
     }
 
-
-    // private void sortSelection(Integer[] arr) {
-        //for (int i = 0; i < arr.length - 1; i++) {
-           // int minElementIndex = i;
-           // for (int j = i + 1; j < arr.length; j++) {
-             //   if (arr[j] < arr[minElementIndex]) {
-               //     minElementIndex = j;
-              //  }
-           // }
-           // swapElements(arr, i, minElementIndex);
-        //}
-   // }
 
     public static void swapElements(Integer[] arr, int indexA, int indexB) {
         int tmp = arr[indexA];
