@@ -1,222 +1,166 @@
 package test;
 
-import test.Exception.ElementNotFoundException;
-import test.Exception.NextNullException;
 import test.Exception.NextOneException;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class IntListenImpl implements Listen {
 
-    private Integer[] storage;
-    private static final int DEFAULT_CAPACITY = 100;
-    private int size;
-
-    IntListenImpl() {
-        this.storage = new Integer[DEFAULT_CAPACITY];
-    }
-
-
-    @Override
-    public Integer add(Integer item) {
-        checkIfNull(item);
-        if (size == storage.length) {
-            growStorage();
-        }
-        storage[size++] = item;
-        return item;
-    }
-
-
-    private void growStorage() {
-        int newCapacity = (int) (storage.length * 1.5);
-        storage = Arrays.copyOf(storage, newCapacity);
-    }
-
-
-    @Override
-    public Integer add(int index, Integer item) {
-        if (index < 0 || index > size) {
-            throw new NextOneException("Элемент индекса");
-        }
-        checkIfNull(item);
-        if (size == storage.length) {
-            growStorage();
-        }
-        System.arraycopy(storage, index, storage, index + 1, size - index);
-        storage[index] = item;
-        size++;
-        return item;
-    }
-
-
-    private void checkIfNull(Integer item) {
-        if (item == null) {
-            throw new NextNullException("Вводимые параметры NULL");
-        }
-
-    }
-
-
-    @Override
-    public Integer set(int index, Integer item) {
-        checkIfNull(item);
-        if (index < 0 || index > size) {
-            throw new NextOneException("Элемент индекса");
-        }
-        Integer lastElement = storage[index];
-        storage[index] = item;
-        return lastElement;
-    }
-
-
-    @Override
-    public Integer remove(Integer item) {
-        checkIfNull(item);
-        int removeElementIndex = indexOf(item);
-
-        if (removeElementIndex == -1) {
-            throw new ElementNotFoundException("Элемент не найден");
-        }
-        System.arraycopy(storage, removeElementIndex, storage, removeElementIndex + 1,
-                size - removeElementIndex);
-        size--;
-        return item;
-    }
-
-
-    @Override
-    public Integer remove(int index) {
-        if (index < 0 || index > size) {
-            throw new NextOneException("Элемент индекса");
-        }
-        Integer removeElement = storage[index];
-        System.arraycopy(storage, index, storage, index + 1,
-                size - index);
-        size--;
-        return removeElement;
-    }
-
-
-    @Override
-    public boolean contains(Integer item) {
-        checkIfNull(item);
-        Integer[] storageCopy = storage.clone();
-        quickSort(storageCopy, 0, storageCopy.length -1);
-        return binarySearch(storageCopy, item) != -1;
-    }
-
-    private void quickSort(Integer[] storageCopy, int begin, int end) {
-        if (begin < end){
-           int partitionIndex = partition(storageCopy, begin, end);
-
-           quickSort(storageCopy, begin, partitionIndex - 1);
-           quickSort(storageCopy, partitionIndex + 1, end);
-        }
-    }
-    private static int partition(Integer[] arr, int begin, int end){
-        int pivot = arr[end];
-        int i = (begin - 1);
-        for (int j = begin; j < end; j++  ) {
-            if (arr[j] <= pivot) {
-                i++;
-                swapElements(arr, 1, j);
-            }
-        }
-        swapElements(arr, i + 1, end);
-        return i + 1;
-    }
-
-
-    private Integer binarySearch(Integer[] array, Integer element) {
-        int min = 0;
-        int max = size - 1;
-        while (min <= max) {
-            int mid = (min + max) / 2;
-            if (element.equals(array[mid])) {
-                return mid;
-            }
-            if (element < array[mid]) {
-                max = mid - 1;
-            } else {
-                min = mid + 1;
-            }
-        }
-        return -1;
-    }
-
-
-    public static void swapElements(Integer[] arr, int indexA, int indexB) {
-        int tmp = arr[indexA];
-        arr[indexA] = arr[indexB];
-        arr[indexB] = tmp;
-    }
-
-    @Override
-    public int indexOf(Integer item) {
-        checkIfNull(item);
-        for (int i = 0; i <= size - 1; i++) {
-            if (storage[i].equals(item)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    @Override
-    public int lastIndexOf(Integer item) {
-        checkIfNull(item);
-        for (int i = size - 1; i >= 0; i--) {
-            if (storage[i].equals(item)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    @Override
-    public Integer get(int index) {
-        if (index < 0 || index > size) {
-            throw new NextOneException("Элемент индекса");
-        }
-
-        return storage[index];
-    }
-
-    @Override
-    public boolean equals(Listen otherList) {
-        if (otherList == null || size != otherList.size()) {
-            return false;
-        }
-        for (int i = 0; i <= size - 1; i++) {
-            if (!get(i).equals(otherList.get(i))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
+        private String[] array = new String[13];
+        private int size = 0;
 
 
         @Override
-        public int size () {
+        public String add(String item) {
+            if (size >= array.length) {
+                String[] extended = new String[array.length * 2];
+                System.arraycopy(array, 0, extended, 0, array.length);
+                array = extended;
+            }
+            array[size] = item;
+            size++;
+            return item;
+        }
+
+        @Override
+        public String add(int index, String item) {
+            if (index < 0 || index > size) {
+                throw new IndexOutOfBoundsException();
+            }
+            add(item);
+            for (int i = size - 1; i > index; i--) {
+                array[i] = array[i - 1];
+            }
+            array[index] = item;
+            return item;
+        }
+
+        @Override
+        public String set(int index, String item) {
+            String old = get(index);
+            array[index] = item;
+            return old;
+        }
+
+        @Override
+        public String remove(String item) {
+            int a = -1;
+            for (int i = 0; i < size; i++) {
+                if (item.equals(array[i])) {
+                    a = i;
+                    break;
+                }
+            }
+            if (a != -1) {
+                remove(a);
+            } else {
+                throw new NextOneException();
+            }
+            return item;
+        }
+
+        @Override
+        public String remove(int index) {
+            String element = get(index);
+            for (int i = index; i < size - 1; i++) {
+                array[i] = array[i + 1];
+            }
+            size--;
+            return element;
+        }
+
+        @Override
+        public boolean contains(String item) {
+            boolean exist = false;
+            for (int i = 0; i < size; i++) {
+                if (array[i].equals(item)) {
+                    exist = true;
+                    break;
+                }
+            }
+            return exist;
+        }
+
+        @Override
+        public int indexOf(String item) {
+            for (int i = 0; i < size; i++) {
+                if (Objects.equals(item, array[i])) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        @Override
+        public int lastIndexOf(String item) {
+            int result = -1;
+            for (int i = size - 1; i >= 0; i--) {
+                if (array[i].equals(item)) {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public String get(int index) {
+            if (index < 0 || index >= size) {
+                throw new IndexOutOfBoundsException();
+            }
+            return array[index];
+        }
+
+        @Override
+        public boolean equals(Listen otherList) {
+            if (otherList == null) {
+                return false;
+            }
+            boolean result = true;
+            if (this.size != otherList.getSize()) {
+                result = false;
+            } else {
+                for (int i = 0; i < this.size; i++) {
+                    if (!this.get(i).equals(otherList.get(i))) {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+    @Override
+        public int getSize() {
             return size;
         }
 
         @Override
-        public boolean isEmpty () {
-            return size == 0;
+        public boolean isEmpty() {
+            boolean result = true;
+            for (String s : array) {
+                if (s != null) {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
         }
 
         @Override
-        public void clear () {
-        storage = new Integer[DEFAULT_CAPACITY];
-        size = 0;
+        public void clear() {
+            array = new String[13];
+            size = 0;
         }
 
         @Override
-        public Integer[] toArray () {
-            return Arrays.copyOf(storage, size);
+        public String[] toArray() {
+            String[] newArray = new String[this.size];
+            for (int i = 0; i < newArray.length; i++) {
+                newArray[i] = this.get(i);
+            }
+            return newArray;
         }
     }
 
